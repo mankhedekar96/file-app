@@ -2,14 +2,15 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import conn from "../db.js";
+import db from "../model/index.js";
+const FileModel = db.files; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFiles = async (req, res) => {
     try {
-        const files = conn.query('SELECT * FROM FILES');
+        const files = await FileModel.findAll();
         
         res.status(200).json(files);
     } catch(error) {
@@ -26,8 +27,11 @@ const createFile =  async (req, res) => {
         }
 
         const filePromises = files.map(file => {
-            let sql = "INSERT INTO files(name) VALUES ('" + file.filename + "')";
-            return conn.query(sql);
+            const newFile = {
+                name: file.filename
+            };
+
+            return FileModel.create(newFile);
         });
 
         Promise.all(filePromises).then((values) => {
@@ -43,19 +47,11 @@ const createFile =  async (req, res) => {
 const updateFile =  async (req, res) => {
     console.log("Update File >>> ", req.body);
     const id = req.params.id;
-    const updatedData = {
-        name: req.body.name,
-        description: req.body.description,
-        locality: req.body.locality,
-        price: req.body.price,
-        address: req.body.address,
-        carpetArea: req.body.carpetArea,
-        images: req.body.images
-    };
 
     try {
-        await File.findByIdAndUpdate(id, updatedData);
-        const stud = await File.findById(id);
+        const stud = await FileModel.update(req.body, {
+            where: { id }
+        });
         res.status(201).json(stud);
     } catch(error) {
         res.status(400).json({ message : error.message});
@@ -65,7 +61,9 @@ const updateFile =  async (req, res) => {
 const deleteFile =  async (req,res) => {
     const id = req.params.id;
     try {
-        const stud = await File.findByIdAndRemove(id);
+        const stud = await FileModel.destroy({
+            where: { id }
+          });
         res.status(200).json(stud);
     } catch(error) {
         res.status(404).json({ message: error.message});

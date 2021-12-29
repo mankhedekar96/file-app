@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import fileRouter from './routes/file-route.js';
 import cors from 'cors';
-import conn from './db.js';
+import db from './model/index.js';
 
 const app = express();
 
@@ -14,10 +14,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// serving static files
-// app.use('/', (req, res) => {
-//     res.send(`You've hit empty route!`);
-// });
+db.sequelize.sync();
 
 app.use(express.static('./uploads'));
 
