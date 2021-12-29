@@ -14,6 +14,7 @@ const getFiles = async (req, res) => {
         
         res.status(200).json(files);
     } catch(error) {
+        console.log(error);
         res.status(404).json({message: error.message});
     }
 };
@@ -28,7 +29,9 @@ const createFile =  async (req, res) => {
 
         const filePromises = files.map(file => {
             const newFile = {
-                name: file.filename
+                name: file.filename,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
             };
 
             return FileModel.create(newFile);
@@ -49,7 +52,10 @@ const updateFile =  async (req, res) => {
     const id = req.params.id;
 
     try {
-        const stud = await FileModel.update(req.body, {
+        const stud = await FileModel.update({
+            name: req.body.name,
+            updatedAt: Date.now()
+        }, {
             where: { id }
         });
         res.status(201).json(stud);
