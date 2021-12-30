@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import fileRouter from './routes/file-route.js';
 import cors from 'cors';
 import db from './model/index.js';
+import path from 'path';
 
 const app = express();
 
@@ -23,3 +24,11 @@ app.listen(port, () =>{
 });
 
 app.use('/files', fileRouter);
+
+//route to download a file
+app.get('/download/:file(*)',(req, res) => {
+    var file = req.params.file;
+    var fileLocation = path.join('./uploads', file);
+    console.log(fileLocation);
+    res.download(fileLocation, file);
+});

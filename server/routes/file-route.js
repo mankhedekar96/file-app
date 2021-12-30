@@ -10,7 +10,7 @@ var storage = multer.diskStorage({
         cb(null, 'uploads')
     },
     filename: (req, file, cb) => {
-        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+        cb(null, file.originalname);
     }
 });
   
