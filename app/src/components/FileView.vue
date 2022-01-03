@@ -5,14 +5,19 @@
     <ul class="file-list" v-if="!loading && files && files.length">
       <li v-for="file in files" :key="file.id" @click="viewFile(file.name)">
         <label>{{ file.name }}</label>
-        <button @click.prevent="downloadFile(file.name)" class="file-download">
-          Download
-        </button>
+        <div>
+          <button @click.prevent="downloadFile(file.name)" class="file-download">
+            Download
+          </button>
+          <button @click.stop="deleteFile(file.id)" class="file-download bg-red">
+            Delete
+          </button>
+        </div>
       </li>
     </ul>
     <p v-if="loading">Still loading..</p>
     <p v-if="error"></p>
-    <UploadModal v-if="showModal" @close="showModal = false"/>
+    <UploadModal v-if="showModal" @close="closeModal"/>
   </div>
 </template>
 
@@ -92,6 +97,21 @@ export default {
     },
     downloadFile(name) {
       window.open("http://localhost:9000/download/" + name);
+    },
+    deleteFile(id) {
+      axios({
+        method: "delete",
+        url: "http://localhost:9000/files/" + id,
+      }).then((response) => {
+        alert("File Deleted!");
+        console.log(response);
+      });
+
+      window.location.reload();
+    },
+    closeModal() {
+      this.showModal = false;
+      window.location.reload();  
     }
   }
 };
@@ -155,5 +175,9 @@ export default {
   background-color: cornflowerblue;
   border-radius: 5px;
   padding: 5px 15px;
+}
+
+.bg-red {
+  background-color: red;
 }
 </style>

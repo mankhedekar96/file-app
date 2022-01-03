@@ -53,19 +53,9 @@ export default {
       // Will be implemented next
       this.loading = true;
       var formData = new FormData();
-      // var imagefile = document.querySelector("#files");
-
-      // var newFileList = new DataTransfer();
-      // console.log(newFileList);
       this.files.forEach(file => {
         formData.append("files", file);
       });
-
-      // formData.append("files", newFileList.files);
-
-      // for (let i = 0; i < newFileList.files.length; i++) {
-      //     formData.append(`files[${i}]`, newFileList.files[i])
-      // }
 
       return axios
         .post("http://localhost:9000/files", formData, {
@@ -89,6 +79,7 @@ export default {
         })
         .then(() => {
           this.loading = false;
+          this.$emit('close');
         });
     },
   },
