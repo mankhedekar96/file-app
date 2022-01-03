@@ -15,6 +15,9 @@
         </div>
       </li>
     </ul>
+    <div class="no-files" v-if="!loading && files && files.length === 0">
+      No files. Please upload files.
+    </div>
     <p v-if="loading">Still loading..</p>
     <p v-if="error"></p>
     <UploadModal v-if="showModal" @close="closeModal"/>
@@ -107,11 +110,11 @@ export default {
         console.log(response);
       });
 
-      window.location.reload();
+      setTimeout(() => window.location.reload(), 2000);
     },
     closeModal() {
       this.showModal = false;
-      window.location.reload();  
+      setTimeout(() => window.location.reload(), 2000);  
     }
   }
 };
@@ -179,5 +182,11 @@ export default {
 
 .bg-red {
   background-color: red;
+}
+
+.no-files {
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 2.5%;
 }
 </style>

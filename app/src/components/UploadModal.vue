@@ -50,6 +50,10 @@ export default {
     },
 
     uploadFiles() {
+      if(this.files.length > 5){
+        alert("At maximum 5 files can be uploaded.");
+        return ;
+      }
       // Will be implemented next
       this.loading = true;
       var formData = new FormData();
